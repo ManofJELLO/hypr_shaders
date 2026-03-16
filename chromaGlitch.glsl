@@ -8,8 +8,8 @@ in vec2 v_texcoord;
 uniform sampler2D tex;
 uniform float time;
 
-// Output for GLES 3.2
-out vec4 FragColor;
+// Output for GLES 3.2 (MUST be lowercase 'fragColor' to match the C++ plugin wrapper)
+out vec4 fragColor;
 
 // --- GLITCH SETTINGS ---
 // Adjust these variables to customize the glitch behavior
@@ -21,8 +21,8 @@ const float direction = 0.5;      // 0.0 = 100% Horizontal, 1.0 = 100% Vertical,
 
 // --- NEW WOBBLE SETTINGS ---
 const float wobbleSpeed = 0.0;   // How fast the wobble oscillates
-const float wobbleAmount = 0.0; // How far the wobble stretches
-const float wobblePhase = 0.0;    // Phase offset between RGB channels (0.0 = together, >0.0 = separated)
+const float wobbleAmount = 0.0;  // How far the wobble stretches
+const float wobblePhase = 0.0;   // Phase offset between RGB channels (0.0 = together, >0.0 = separated)
 
 // Simple pseudo-random hash function based on time
 float hash(float n) {
@@ -35,6 +35,7 @@ void main() {
     
     // Determine the start of the current glitch cycle using the max interval as a grid
     float seed = floor(t / maxInterval);
+    
     // Calculate a pseudo-random time within the current maxInterval grid
     float nextGlitchTime = seed * maxInterval + hash(seed) * (maxInterval - minInterval);
     
@@ -57,7 +58,7 @@ void main() {
         // --- BLENDED DIRECTIONAL LOGIC ---
         // Calculate the raw horizontal displacement
         // Step 0.8 means ~20% of the screen rows tear at once
-        float tearRow = step(0.8, hash(uv.y * 10.0 + stutterTime)); 
+        float tearRow = step(0.8, hash(uv.y * 10.0 + stutterTime));
         float offsetX = tearRow * tearStrength;
         
         // Calculate the raw vertical displacement
@@ -99,9 +100,9 @@ void main() {
         float g = texture(tex, baseUV + wobbleG).g;
         float b = texture(tex, baseUV - shiftVec + wobbleB).b;
         
-        FragColor = vec4(r, g, b, 1.0);
+        fragColor = vec4(r, g, b, 1.0);
     } else {
         // Regular rendering when not glitching
-        FragColor = texture(tex, uv);
+        fragColor = texture(tex, uv);
     }
 }
