@@ -1,6 +1,6 @@
-Can be used with 
-https://github.com/ManofJELLO/HyprWindowShade
-or
+Can be used with  
+https://github.com/ManofJELLO/HyprWindowShade  
+or  
 https://github.com/loqusion/hyprshade  
 place them in you ~/.config/hypr/shaders location  
 
