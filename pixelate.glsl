@@ -100,5 +100,6 @@ void main() {
     
     color_rgb *= (vignette * round_corner);
 
-    fragColor = vec4(color_rgb, 1.0);
+   fragColor = vec4(color_rgb, 1.0);
+   
 }

@@ -16,13 +16,13 @@ const vec3 RAW_RGB = vec3(255.0, 107.0, 0.0);
 
 // --- CONFIGURATION LEVELS ---
 // Tweak these values to change the intensity of the effects
-const float EDGE_STRENGTH = 0.4;     // Sensitivity of wireframe detection
-const float CRT_CURVATURE = 0.15;    // Degree of screen bulging (0.0 = flat)
-const float VIGNETTE_SIZE = 0.2;     // Intensity of corner darkening
-const float PHOSPHOR_GLOW = 0.6;     // Blur/Persistence level (0.0 = sharp, 1.0+ = heavy blur)
+const float EDGE_STRENGTH = 0.6;     // Sensitivity of wireframe detection
+const float CRT_CURVATURE = 0.1;    // Degree of screen bulging (0.0 = flat)
+const float VIGNETTE_SIZE = 0.1;     // Intensity of corner darkening
+const float PHOSPHOR_GLOW = 0.1;     // Blur/Persistence level (0.0 = sharp, 1.0+ = heavy blur)
 
 // New Scanline Control (0.0 to 1.0)
-const float scanline_intensity = 0.3; 
+const float scanline_intensity = 0.15; 
 // Adjust this to change thickness of lines (usually 1.0 or 2.0)
 const float pixel_size = 1.0;         
 
