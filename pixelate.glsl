@@ -71,7 +71,10 @@ void main() {
     color_rgb *= brightness_gain;
 
     // B. Apply Gamma (helps with midtones getting crushed)
-    color_rgb = pow(color_rgb, vec3(gamma_correction));
+    // The sharpening pass above undershoots below 0 wherever a dark pixel sits
+    // next to a bright one. pow() of a negative base is undefined in GLSL and
+    // returns NaN here, which the compositor then resolves to full white.
+    color_rgb = pow(max(color_rgb, 0.0), vec3(gamma_correction));
 
     // C. Apply Saturation
     float luma = dot(color_rgb, vec3(0.299, 0.587, 0.114));
@@ -96,7 +99,9 @@ void main() {
     // 7. Vignette & Corner Feathering
     vec2 vignette_uv = (v_texcoord * 2.0) - 1.0;
     float vignette = 1.0 - dot(vignette_uv, vignette_uv) * 0.15; 
-    float round_corner = pow(16.0 * v_texcoord.x * v_texcoord.y * (1.0-v_texcoord.x) * (1.0-v_texcoord.y), vignette_intensity);
+    // Same trap on the edge pixels, where the base is exactly 0: pow(0.0, 0.0)
+    // is undefined too. Floored so the term stays 1.0 when the vignette is off.
+    float round_corner = pow(max(16.0 * v_texcoord.x * v_texcoord.y * (1.0-v_texcoord.x) * (1.0-v_texcoord.y), 1e-6), vignette_intensity);
     
     color_rgb *= (vignette * round_corner);
 
