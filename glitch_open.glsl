@@ -1,6 +1,7 @@
 #version 320 es
 // Source: community-umbriel-shaders animation/glitch — MIT, © Barrulus.
 // Adapted to the HyprWindowShade shader interface.
+// @duration 0.8  (Umbriel's own timing for this preset)
 precision highp float;
 
 in vec2 v_texcoord;
