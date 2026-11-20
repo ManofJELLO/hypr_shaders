@@ -1,6 +1,7 @@
 #version 320 es
 // Source: community-umbriel-shaders animation/cells — MIT, © Barrulus.
 // Adapted to the HyprWindowShade shader interface.
+// @duration 1.1  (Umbriel's own timing)
 precision highp float;
 
 in vec2 v_texcoord;
