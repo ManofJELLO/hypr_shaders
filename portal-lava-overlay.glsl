@@ -1,6 +1,4 @@
 #version 320 es
-// Source: community-umbriel-shaders window/portal-lava-overlay — MIT, © Barrulus.
-// Adapted to the HyprWindowShade shader interface.
 precision highp float;
 
 in vec2 v_texcoord;
@@ -10,6 +8,8 @@ uniform float time;
 uniform vec2 surface_size;
 
 #define umbriel_sample(uv) texture(tex, (uv))
+// This effect keeps its own colours: the lava's gradients are what give it
+// volume, and the theme remap flattens them into one solid tone.
 #define umbriel_palette_count 0
 #define umbriel_palette_at(i) vec4(1.0)
 #define umbriel_time time
@@ -33,7 +33,8 @@ vec4 tex2D_screen(vec2 uv) { return umbriel_sample(uv); }
 #define ring_size (umbriel_size / max(umbriel_scale, 0.01))
 #define ring_width 6.0
 #define ring_padding 14.0
-#define ring_radius vec4(4.0)
+uniform vec4 umbriel_border_radius;  // host-bound: the surface's real rounding (logical px)
+#define ring_radius clamp(umbriel_border_radius, vec4(0.0), vec4(min(ring_size.x, ring_size.y) * 0.5))
 float ring_distance(vec2 p) {
     vec2 half_size = ring_size * 0.5;
     float radius = min(4.0, min(half_size.x, half_size.y));

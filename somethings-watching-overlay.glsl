@@ -1,6 +1,4 @@
 #version 320 es
-// Source: community-umbriel-shaders window/somethings-watching-overlay — MIT, © Barrulus.
-// Adapted to the HyprWindowShade shader interface.
 precision highp float;
 
 in vec2 v_texcoord;
@@ -40,7 +38,8 @@ float coverage(float distance) {
     float aa=0.65/max(umbriel_scale,0.1);
     return 1.0-smoothstep(-aa,aa,distance);
 }
-float radiusFor(vec2 size) { return min(18.0,min(size.x,size.y)*0.18); }
+uniform vec4 umbriel_border_radius;  // host-bound: the surface's real rounding (logical px)
+float radiusFor(vec2 size) { return clamp(umbriel_border_radius.x, 0.0, min(size.x,size.y)*0.5); }
 float perimeter(vec2 size,float r) { return 2.0*(size.x+size.y-4.0*r)+2.0*PI*r; }
 // Clockwise arclength and signed inward distance, including rounded corners.
 vec2 frameCoord(vec2 p,vec2 size,float r) {

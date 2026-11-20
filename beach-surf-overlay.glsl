@@ -1,6 +1,4 @@
 #version 320 es
-// Source: community-umbriel-shaders window/beach-surf-overlay — MIT, © Barrulus.
-// Adapted to the HyprWindowShade shader interface.
 precision highp float;
 
 in vec2 v_texcoord;
@@ -10,8 +8,25 @@ uniform float time;
 uniform vec2 surface_size;
 
 #define umbriel_sample(uv) texture(tex, (uv))
-#define umbriel_palette_count 0
-#define umbriel_palette_at(i) vec4(1.0)
+// Theme palette: the same bridge the border pass uses, so the interior and
+// the exterior half of a paired effect paint with the same colours.
+uniform int umbriel_palette_count;
+uniform vec4 umbriel_palette[4];
+vec4 umbriel_palette_at(float t) {
+    if (umbriel_palette_count <= 0) return vec4(0.07, 0.12, 0.19, 1.0);
+    float span = float(umbriel_palette_count);
+    float pos  = clamp(t, 0.0, 0.999) * span;
+    float index = floor(pos);
+    float next = index + 1.0;
+    vec4 from = umbriel_palette[0];
+    vec4 to = umbriel_palette[0];
+    for (int i = 0; i < 4; i++) {
+        if (float(i) >= span) break;
+        if (float(i) == index) from = umbriel_palette[i];
+        if (float(i) == next) to = umbriel_palette[i];
+    }
+    return mix(from, to, pos - index);
+}
 #define umbriel_time time
 #define umbriel_size surface_size
 #define umbriel_scale 1.0
@@ -92,7 +107,8 @@ vec4 surf_edge(vec2 p, float d, float t, float aa) {
     return vec4(color, clamp(alpha, 0.0, 1.0));
 }
 
-const float SURF_CONTENT_RADIUS = 4.0;
+uniform vec4 umbriel_border_radius;  // host-bound: the surface's real rounding (logical px)
+#define SURF_CONTENT_RADIUS umbriel_border_radius.x
 vec4 postprocess(vec3 coords) {
     vec4 source = tex2D_screen(coords.xy);
     vec2 size = umbriel_size / max(umbriel_scale, 0.01);

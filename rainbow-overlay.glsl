@@ -1,6 +1,4 @@
 #version 320 es
-// Source: community-umbriel-shaders window/rainbow-overlay — MIT, © Barrulus.
-// Adapted to the HyprWindowShade shader interface.
 precision highp float;
 
 in vec2 v_texcoord;
@@ -21,9 +19,10 @@ vec4 tex2D_screen(vec2 uv) { return umbriel_sample(uv); }
 
 
 #define ring_size (umbriel_size / max(umbriel_scale, 0.01))
-#define ring_width 6.0
+#define ring_width 3.0
 #define ring_padding 14.0
-#define ring_radius vec4(4.0)
+uniform vec4 umbriel_border_radius;  // host-bound: the surface's real rounding (logical px)
+#define ring_radius clamp(umbriel_border_radius, vec4(0.0), vec4(min(ring_size.x, ring_size.y) * 0.5))
 
 float ring_distance(vec2 coords) {
     vec2 half_size = ring_size * 0.5;

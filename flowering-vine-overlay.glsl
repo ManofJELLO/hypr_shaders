@@ -1,6 +1,4 @@
 #version 320 es
-// Source: community-umbriel-shaders window/flowering-vine-overlay — MIT, © Barrulus.
-// Adapted to the HyprWindowShade shader interface.
 precision highp float;
 
 in vec2 v_texcoord;
@@ -10,8 +8,25 @@ uniform float time;
 uniform vec2 surface_size;
 
 #define umbriel_sample(uv) texture(tex, (uv))
-#define umbriel_palette_count 0
-#define umbriel_palette_at(i) vec4(1.0)
+// Theme palette: the same bridge the border pass uses, so the interior and
+// the exterior half of a paired effect paint with the same colours.
+uniform int umbriel_palette_count;
+uniform vec4 umbriel_palette[4];
+vec4 umbriel_palette_at(float t) {
+    if (umbriel_palette_count <= 0) return vec4(0.07, 0.12, 0.19, 1.0);
+    float span = float(umbriel_palette_count);
+    float pos  = clamp(t, 0.0, 0.999) * span;
+    float index = floor(pos);
+    float next = index + 1.0;
+    vec4 from = umbriel_palette[0];
+    vec4 to = umbriel_palette[0];
+    for (int i = 0; i < 4; i++) {
+        if (float(i) >= span) break;
+        if (float(i) == index) from = umbriel_palette[i];
+        if (float(i) == next) to = umbriel_palette[i];
+    }
+    return mix(from, to, pos - index);
+}
 #define umbriel_time time
 #define umbriel_size surface_size
 #define umbriel_scale 1.0
@@ -34,7 +49,8 @@ vec4 tex2D_screen(vec2 uv) { return umbriel_sample(uv); }
 #define ring_size (umbriel_size / max(umbriel_scale, 0.01))
 #define ring_width 6.0
 #define ring_padding 8.0
-#define ring_radius vec4(4.0)
+uniform vec4 umbriel_border_radius;  // host-bound: the surface's real rounding (logical px)
+#define ring_radius clamp(umbriel_border_radius, vec4(0.0), vec4(min(ring_size.x, ring_size.y) * 0.5))
 
 float ring_distance(vec2 coords) {
     vec2 half_size = ring_size * 0.5;

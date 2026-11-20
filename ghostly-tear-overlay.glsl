@@ -1,6 +1,4 @@
 #version 320 es
-// Source: community-umbriel-shaders window/ghostly-tear-overlay — MIT, © Barrulus.
-// Adapted to the HyprWindowShade shader interface.
 precision highp float;
 
 in vec2 v_texcoord;
@@ -13,7 +11,8 @@ uniform vec2 surface_size;
 #define umbriel_time time
 #define umbriel_size surface_size
 #define umbriel_scale 1.0
-#define umbriel_corner_radius vec4(0.0)
+uniform vec4 umbriel_border_radius;  // host-bound: the surface's real rounding (logical px)
+uniform vec4 umbriel_corner_radius;  // host-bound: the surface's real rounding
 
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Barrulus

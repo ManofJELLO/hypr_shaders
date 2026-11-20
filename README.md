@@ -77,6 +77,53 @@ Permanent effects over the window content. They need `tex`, plus `time` when ani
 | `snowfall.glsl` | Snow falling over window content. |
 | `somethings-watching-overlay.glsl` | The inward portion of the Pumpkin Parade border: twisting vines, growing jack-o’-lanterns, blinking cat eyes and marching skeletons. |
 
+## Border shaders (ported from Umbriel)
+
+These paint the ring that surrounds the window, so they need a plugin that
+draws the border as a canvas instead of a fixed line — see
+[HyprWindowShade#9](https://github.com/ManofJELLO/HyprWindowShade/pull/9).
+Without that support they cannot run here.
+
+| File | Band | Inner half |
+|---|---|---|
+| `border/accent-pulse.glsl` | 6px | — |
+| `border/arcane-hextech-filament.glsl` | 6px | — |
+| `border/beach-surf.glsl` | 6px | `beach-surf-overlay.glsl` |
+| `border/cartoon-chase.glsl` | 6px | `cartoon-chase-overlay.glsl` |
+| `border/diya-lights.glsl` | 6px | `diya-glow-overlay.glsl` |
+| `border/dual-orbit.glsl` | 3px | — |
+| `border/faerie-magic.glsl` | 6px | `faerie-magic-overlay.glsl` |
+| `border/flowering-vine.glsl` | 6px | `flowering-vine-overlay.glsl` |
+| `border/flowing-water.glsl` | 6px | — |
+| `border/fractal-flow.glsl` | 6px | `fractal-flow-overlay.glsl` |
+| `border/fuse.glsl` | 12px | — |
+| `border/ghostly-tear-border.glsl` | 6px | `ghostly-tear-overlay.glsl` |
+| `border/heartbeat.glsl` | 6px | — |
+| `border/lightning.glsl` | 11px | — |
+| `border/neon-bleed.glsl` | 6px | `neon-bleed-overlay.glsl` |
+| `border/paper.glsl` | 6px | `paper-overlay.glsl` |
+| `border/pink-ribbon.glsl` | 6px | `pink-ribbon-overlay.glsl` |
+| `border/portal-lava.glsl` | 12px | `portal-lava-overlay.glsl` |
+| `border/pulse.glsl` | 6px | — |
+| `border/rainbow.glsl` | 3px | `rainbow-overlay.glsl` |
+| `border/sentient-runner.glsl` | 6px | — |
+| `border/sentient-spark.glsl` | 6px | — |
+| `border/somethings-watching.glsl` | 6px | `somethings-watching-overlay.glsl` |
+
+The band is how wide the ring the effect paints is (`// @border` in the
+file's comments): the plugin applies it to `general:border_size` when the
+effect is applied and restores your value when it is removed. `// @padding`
+grows the canvas without touching the layout, and `// @speed` matches
+Umbriel's own time scaling.
+
+Thirteen of them ship an inner half in the repository root: the
+`-overlay` file of the same name paints the same effect over the window's
+content, and the two travel together when the focus moves. Those overlays
+declare the theme palette uniforms so the inside and the rim paint with the
+same colours; the plugin reads that palette from
+`~/.config/hypr/shaders/umbriel/palette.txt` (four lines of `r g b a`), so a
+theme tool can rewrite it live.
+
 ## Open, close and motion animations (ported from Umbriel)
 
 One-shot animations driven by `progress`. Every `_close` reaches alpha 0 at

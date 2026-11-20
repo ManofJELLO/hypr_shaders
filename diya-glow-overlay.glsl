@@ -1,6 +1,4 @@
 #version 320 es
-// Source: community-umbriel-shaders window/diya-glow-overlay — MIT, © Barrulus.
-// Adapted to the HyprWindowShade shader interface.
 precision highp float;
 
 in vec2 v_texcoord;
